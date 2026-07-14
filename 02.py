@@ -8,12 +8,12 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_tavily import TavilySearch
 from pydantic import BaseModel, Field
 from langchain.agents import create_agent
-from langchain.agents.structured_output import ToolStrategy
+from langchain.agents.structured_output import ProviderStrategy, ToolStrategy
 
 load_dotenv()
 
-# model = init_chat_model(model="gpt-oss", model_provider="ollama", temperature=0)
-model = init_chat_model(model="gpt-4o-mini", model_provider="openai", temperature=0)
+model = init_chat_model(model="gpt-oss", model_provider="ollama", temperature=0)
+# model = init_chat_model(model="gpt-4o-mini", model_provider="openai", temperature=0)
 
 
 def create_search_query(genre: str, mood: str, decade: str) -> str:
@@ -106,7 +106,8 @@ def recommend_movie_agent(query: str) -> Movies:
     agent = create_agent(
         model=model,
         tools=tools,
-        response_format=ToolStrategy(Movies),
+        # response_format=ToolStrategy(Movies),
+        response_format=ProviderStrategy(Movies),
         system_prompt=(
             "You are a movie recommendation engine that uses Tavily search to produce "
             "accurate and relevant recommendations.\n\n"
